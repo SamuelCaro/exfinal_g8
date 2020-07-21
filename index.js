@@ -8,8 +8,6 @@ var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
 
-
-
 app.use(bodyParser.urlencoded({extended: true}));
 var conn = mysql.createConnection({
     host: "localhost",
@@ -25,9 +23,6 @@ conn.connect(function (err) {
         console.log("Conexión exitosa a base de datos");
     }
 });
-
-
-
 
 
 //server init
