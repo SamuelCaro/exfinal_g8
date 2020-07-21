@@ -58,6 +58,8 @@ app.post("/login", function (request, response) {
 
 
                 if (jsonRespuesta[0].password === jsonRespuesta[0].try) {
+                    connectedUsers++;
+                    users[jsonRespuesta[0].userid] = jsonRespuesta[0].username;
                     response.sendFile(__dirname + '/index.html');
                 } else {
                     response.sendFile(__dirname + '/login.html');
@@ -78,7 +80,7 @@ var Utipeando = {};
 //Socket io
 io.on('connection', function (socket) {
 
-    connectedUsers++;
+
     io.emit('connUsers', connectedUsers);
 
     console.log("Usuario Conectado");
