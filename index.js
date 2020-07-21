@@ -38,7 +38,7 @@ server.listen(3000, function () {
 
 //express routes
 app.get('/', function (req, res) {
-        res.sendFile(__dirname + '/login.html');
+    res.sendFile(__dirname + '/login.html');
 
 });
 
@@ -54,7 +54,7 @@ app.post("/login", function (request, response) {
         } else {
             console.log(jsonRespuesta.password);
             console.log(jsonRespuesta.try);
-            if(jsonRespuesta[0] != null) {
+            if (jsonRespuesta[0] != null) {
 
 
                 if (jsonRespuesta[0].password === jsonRespuesta[0].try) {
@@ -64,13 +64,12 @@ app.post("/login", function (request, response) {
                 } else {
                     response.sendFile(__dirname + '/login.html');
                 }
-            }else {
+            } else {
                 response.sendFile(__dirname + '/login.html');
             }
         }
     })
 });
-
 
 
 var connectedUsers = 0;
@@ -94,9 +93,10 @@ io.on('connection', function (socket) {
     socket.on('chat message', function (msg) {
         console.log("Mensaje del cliente: " + msg);
         socket.broadcast.emit('mensaje', {username: users[socket.id], msg: msg});
+        /* no pudimos evaluar los mensajes en su totalidad:
         if(msg.equals("chiqui") || msg.equals("crash") || msg.equals("hielo")){
         socket.disconnect;
-        }
+        */
     });
 
 
