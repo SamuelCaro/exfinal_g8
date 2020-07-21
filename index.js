@@ -76,12 +76,58 @@ app.post("/login", function (request, response) {
 var connectedUsers = 0;
 var users = {};
 var Utipeando = {};
+var samuel ;
+var sebstian;
+var stuardo;
+var julio;
+var gonzalo;
 
 //Socket io
 io.on('connection', function (socket) {
 
-
     io.emit('connUsers', connectedUsers);
+    var i;
+    for (i = 0; i < 5; i++) {
+        if(users[i] != null){
+            switch (i) {
+                case 1:
+                    samuel =true;
+                    break;
+                case 2:
+                    sebstian = true;
+                    break;
+                case 3:
+                    stuardo = true;
+                    break;
+                case 4:
+                    julio = true;
+                    break;
+                case 5:
+                    gonzalo = true;
+                    break;
+            }
+        }else{
+            switch (i) {
+                case 1:
+                    samuel =false;
+                    break;
+                case 2:
+                    sebstian = false;
+                    break;
+                case 3:
+                    stuardo = false;
+                    break;
+                case 4:
+                    julio = false;
+                    break;
+                case 5:
+                    gonzalo = false;
+                    break;
+        }
+    }
+    }
+
+    io.emit('UsuariosVerdes', {samuel: samuel, sebstian: sebstian,stuardo: stuardo,julio: julio,gonzalo: gonzalo});
 
     console.log("Usuario Conectado");
     socket.on('disconnect', function () {
