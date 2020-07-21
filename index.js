@@ -24,6 +24,10 @@ conn.connect(function (err) {
     } else {
         console.log("Conexión exitosa a base de datos");
     }
+    conn.query("select user.username, user.connection from user;", function (err, results) {
+        if (err) throw err;
+        console.log(results);
+    });
 });
 
 
@@ -36,6 +40,8 @@ server.listen(3000, function () {
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
+
+
 
 var connectedUsers = 0;
 var users = {};
@@ -58,6 +64,9 @@ io.on('connection', function (socket) {
     socket.on('chat message', function (msg) {
         console.log("Mensaje del cliente: " + msg);
         socket.broadcast.emit('mensaje', {username: users[socket.id], msg: msg});
+        if(msg.equals("chiqui") || msg.equals("crash") || msg.equals("hielo")){
+        socket.disconnect;
+        }
     });
 
 

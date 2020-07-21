@@ -14,11 +14,12 @@
                 if (username == null || username == "") {
                     username = prompt("Ingrese su nombre");
                     socket.emit('username', username);
-                    if(username == null || username == ""){
-                        return false;}
+                    if (username == null || username == "") {
+                        return false;
+                    }
                 }
                 socket.emit('chat message', $('#m').val());
-                $('#messages').append($('<li>').text(  username + ": " + $('#m').val()  ));
+                $('#messages').append($('<li>').text(username + ": " + $('#m').val()));
                 $('#m').val('');
                 socket.emit('typing', "fals");
                 return false;
@@ -30,18 +31,18 @@
 
             socket.on('connUsers', function (connU) {
                 $('#connUsers').text(connU);
-            })
+            });
 
             $('m').keypress(function () {
-                if($('#m').val() != null && $('#m').val() != ""){
+                if ($('#m').val() != null && $('#m').val() != "") {
                     socket.emit('typing', "tru");
-                }else{
+                } else {
                     socket.emit('typing', "fals");
                 }
 
             });
 
-            socket.on('tipeando', function(tip){
+            socket.on('tipeando', function (tip) {
                 var tipeando;
 
                 textotip =
@@ -49,7 +50,24 @@
             });
 
 
+            socket.on('usuarios', function (result) {
+                conn.query("select user.username, user.connection from user;", function (err, results) {
+                    if (err) throw err;
+                    console.log(results);
+                });
+                for (i = 0; i++; i < results.length()) {
+                    contentHtml += "<tr>";
+                    contentHtml += "<td>" + user.username + "</td>";
+                    contentHtml += "<td>" + user.connection + "</td>";
+                    contentHtml += "<tr>";
+
+                }
+
+                $("#conntables").html(contentHtml);
+            });
+
         });
+
         //que baje automáticamente
         //$(document).scrollTop($(document).height());
 
@@ -112,5 +130,19 @@
     <input id="m" autocomplete="off"/>
     <button>Send</button>
 </form>
+
+
+<h3>Lista de Usuarios</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>Last Connection</th>
+    </tr>
+    </thead>
+    <tbody id="conntables">
+    </tbody>
+</table>
+
 </body>
 </html>
