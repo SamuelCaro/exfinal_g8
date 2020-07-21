@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/websocketapp.iml" filepath="$PROJECT_DIR$/websocketapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/exfinal_g8.iml" filepath="$PROJECT_DIR$/exfinal_g8.iml" />
     </modules>
   </component>
 </project>
