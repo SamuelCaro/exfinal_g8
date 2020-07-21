@@ -17,28 +17,41 @@ server.listen(3000, function () {
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
-var conexiones = 0;
+
+var connectedUsers = 0;
+var users = {};
+var Utipeando = {};
+
 //Socket io
 io.on('connection', function (socket) {
+
+    connectedUsers++;
+    io.emit('connUsers', connectedUsers);
+
     console.log("Usuario Conectado");
-    conexiones++;
-    console.log("cantidad de usuarios: " + conexiones);
-    io.emit("conexiones", conexiones);
-
     socket.on('disconnect', function () {
-        console.log('Usuario Desconectado');
-        conexiones--;
-        console.log("cantidad de usuarios: " + conexiones);
-        io.emit("conexiones", conexiones);
+        connectedUsers--;
+        io.emit('connUsers', connectedUsers);
 
+        console.log('Usuario Desconectado');
     });
 
-    socket.on('chat', function (msg) {
-        console.log("mensaje del cliente: " + msg);
+    socket.on('chat message', function (msg) {
+        console.log("Mensaje del cliente: " + msg);
+        socket.broadcast.emit('mensaje', {username: users[socket.id], msg: msg});
+    });
 
-        io.emit("mensaje recibido", msg);
+
+    socket.on('username', function (username) {
+        users[socket.id] = username;
+        console.log(users);
+    });
+
+    socket.on('typing', function (caso) {
+        Utipeando[socket.id] = {username: users[socket.id], tip: caso};
+        socket.broadcast.emit('tipeando', Utipeando[socket.id]);
+
     });
 
 
 });
-

@@ -1,35 +1,57 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <link rel="shortcut icon" href="#"/>
 <head>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(function () {
             var socket = io();
+            var username;
 
-            $("form").submit(function () {
-                var mensaje = $("#m").val();
-                socket.emit('chat', mensaje);
-                $("#m").val("");
+
+            $('form').submit(function () {
+                if (username == null || username == "") {
+                    username = prompt("Ingrese su nombre");
+                    socket.emit('username', username);
+                    if(username == null || username == ""){
+                        return false;}
+                }
+                socket.emit('chat message', $('#m').val());
+                $('#messages').append($('<li>').text(  username + ": " + $('#m').val()  ));
+                $('#m').val('');
+                socket.emit('typing', "fals");
                 return false;
             });
 
-            socket.on('mensaje recibido', function (msg) {
-                console.log("mensaje desde el servidor: " + msg);
-                $("#messages").append($('<li>').text(msg));
+            socket.on('mensaje', function (msg) {
+                $('#messages').append($('<li>').text(msg.username + ": " + msg.msg));
+            });
+
+            socket.on('connUsers', function (connU) {
+                $('#connUsers').text(connU);
+            })
+
+            $('m').keypress(function () {
+                if($('#m').val() != null && $('#m').val() != ""){
+                    socket.emit('typing', "tru");
+                }else{
+                    socket.emit('typing', "fals");
+                }
 
             });
 
+            socket.on('tipeando', function(tip){
+                var tipeando;
 
-            socket.on("conexiones", function (cantConexiones) {
-                var msg = "Usuarios conectados: " + cantConexiones;
-                $("#conexiones").text(msg);
-
-
+                textotip =
+                    tip.username + tip.tip
             });
+
+
         });
-
+        //que baje automáticamente
+        //$(document).scrollTop($(document).height());
 
     </script>
     <style>
@@ -84,7 +106,7 @@
     </style>
 </head>
 <body>
-<p id="conexiones"></p>
+<div>Usuarios conectados: <span id="connUsers"></span></div>
 <ul id="messages"></ul>
 <form action="">
     <input id="m" autocomplete="off"/>
@@ -92,5 +114,3 @@
 </form>
 </body>
 </html>
-
-
