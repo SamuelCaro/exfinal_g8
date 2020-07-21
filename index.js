@@ -34,7 +34,35 @@ server.listen(3000, function () {
 
 //express routes
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
+        res.sendFile(__dirname + '/login.html');
+
+});
+
+app.post("/login", function (request, response) {
+    var sql = "SELECT *, SHA2(?, 256) as try  FROM exfinal_g8.user WHERE username = ?";
+    var param = [request.body.password, request.body.username];
+    console.log(request.body.password);
+    console.log(request.body.username);
+    conn.query(sql, param, function (err, jsonRespuesta) {
+        if (err) {
+            console.log(err);
+            response.sendFile(__dirname + '/login.html');
+        } else {
+            console.log(jsonRespuesta.password);
+            console.log(jsonRespuesta.try);
+            if(jsonRespuesta[0] != null) {
+
+
+                if (jsonRespuesta[0].password === jsonRespuesta[0].try) {
+                    response.sendFile(__dirname + '/index.html');
+                } else {
+                    response.sendFile(__dirname + '/login.html');
+                }
+            }else {
+                response.sendFile(__dirname + '/login.html');
+            }
+        }
+    })
 });
 
 var connectedUsers = 0;
