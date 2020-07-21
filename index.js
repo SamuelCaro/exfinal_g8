@@ -2,6 +2,8 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
+const bodyParser = require("body-parser");
+const mysql = require("mysql2");
 
 //configs
 var app = express();
